@@ -10,6 +10,7 @@
 
 <script>
 import  EachTask from './Task.vue'
+import { ENV } from '../config/config'
 
 
 export default {
@@ -21,5 +22,18 @@ export default {
         EachTask
     },
     emits: ['delete-task', 'toggle-reminder'],
+    created(){
+        console.log("url :",ENV.url)
+        let url = `${ENV.url}task/`
+        fetch(url, {
+            method:'GET',
+        }).then(res => res.json()).then(data => {
+            if(data.success){
+                console.log('data: ',data);
+            }
+        }).catch(error=>{
+            console.log('error: ',error)
+        })
+    }
 }
 </script>
