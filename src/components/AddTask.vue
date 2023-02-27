@@ -2,13 +2,13 @@
       <form @submit="onSubmit" class="add-form">
     <div class="form-control">
       <label>Task</label>
-      <input type="text" v-model="text" name="text" placeholder="Add Task" />
+      <input type="text" v-model="title" name="text" placeholder="Add Task" />
     </div>
     <div class="form-control">
       <label>Day & Time</label>
       <input
         type="text"
-        v-model="day"
+        v-model="date"
         name="day"
         placeholder="Add Day & Time"
       />
@@ -29,29 +29,29 @@ export default {
     name : 'AddTask',
     data(){
         return {
-            text : '',
-            day: '',
+            title : '',
+            date: '',
             reminder: false
         }
     },
     methods:{
         onSubmit(e){
             e.preventDefault()
-            if(!this.text){
+            if(!this.title){
                 alert('please add a task')
                 return 
             }
 
             const newTask={
-                id: Math.floor(Math.random() * 100000),
-                text:this.text,
-                day: this.day,
+                // id: Math.floor(Math.random() * 100000),
+                title:this.title,
+                date: this.date,
                 reminder: this.reminder,
             }
 
             this.$emit('add-task',newTask)
-            this.text = ''
-            this.day = ''
+            this.title = ''
+            this.date = ''
             this.reminder = false
         }
     }

@@ -5,7 +5,7 @@
       <AddTask @add-task="addTask" />
     </div>
 
-    <ListTask   @delete-task="deleteTask" @toggle-reminder="toggleReminder" :tasks="tasks"/>
+    <ListTask   @delete-task="deleteTask" @toggle-reminder="toggleReminder" :tasks="tasks"  @update-Task-List="updateTaskList" />
   </div>
 </template>
 
@@ -13,6 +13,8 @@
 import HeaderFirst from './components/Header.vue';
 import ListTask from './components/Tasks.vue';
 import AddTask from './components/AddTask.vue';
+import { ENV } from './config/config';
+
 
 export default {
   name: 'App',
@@ -32,10 +34,40 @@ export default {
       this.addShowTask = !this.addShowTask
     },
     addTask(task){
+      let url = `${ENV.url}task/create`;
+      fetch(url ,{
+        method:'POST',
+        headers:{
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(task)
+      }).then(res => res.json())
+      .then(data =>{
+        if(data){
+          task = data.task
+        }
+      })
+      .catch(error=>{
+        console.log('error: ',error)
+      })
       this.tasks = [...this.tasks , task]
     },
+    updateTaskList(list){
+      this.tasks = list
+    },
     deleteTask(id){
-      this.tasks = this.tasks.filter( (task) => task.id !== id)
+      let url = `${ENV.url}task/${id}`;
+      fetch(url ,{
+        method:'DELETE'
+      }).then(res => res.json())
+      .then(data =>{
+        console.log("response from delete Task API: ",data)
+      })
+      .catch(error=>{
+        console.log('error: ',error)
+      })
+
+      this.tasks = this.tasks.filter( (task) => task._id !== id)
     },
     toggleReminder(id){
       this.tasks = this.tasks.map((task)=>
